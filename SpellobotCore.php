@@ -19,64 +19,195 @@ class SpellobotCore
     // TODO: migrate to database
     private $wordGroups = array(
         '-tion' => array(
-            'education',
-            'vacation',
-            'action',
-            'station',
-            'situation'
+            array(
+                'word' => 'education',
+                'translation' => 'образование',
+                'transcription' => '[ˌɛdʒʊˈkeɪʃn]',
+            ),
+            array(
+                'word' => 'vacation',
+                'translation' => 'отпуск',
+                'transcription' => '[vəˈkeɪʃ(ə)n]',
+            ),
+            array(
+                'word' => 'action',
+                'translation' => 'действие',
+                'transcription' => '[ˈæk.ʃən]',
+            ),
+            array(
+                'word' => 'station',
+                'translation' => 'станция',
+                'transcription' => '[ˈsteɪʃən]',
+            ),
+            array(
+                'word' => 'conversation',
+                'translation' => 'разговор, беседа',
+                'transcription' => '[ˌkɒnvəˈseɪʃən]',
+            ),
         ),
         '-all' => array(
-            'call',
-            'ball',
-            'small',
+            array(
+                'word' => 'call',
+                'translation' => 'звонок, звонить (to call)',
+                'transcription' => '[сɔːl]',
+            ),
+            array(
+                'word' => 'small',
+                'translation' => 'маленький',
+                'transcription' => '[ˈsmɔːl]',
+            ),
+            array(
+                'word' => 'ball',
+                'translation' => 'мяч',
+                'transcription' => '[bɔːl]',
+            ),
             array(
                 'word' => 'wall',
                 'translation' => 'стена',
                 'transcription' => '[wɔːl]',
             ),
-            'football'
+            array(
+                'word' => 'football',
+                'translation' => 'футбол',
+                'transcription' => '[ˈfu̇t-ˌbɔːl]',
+            ),
         ),
         '-ight' => array(
-            'right',
-            'night',
-            'fight',
-            'light',
-            'tight'
+            array(
+                'word' => 'right',
+                'translation' => 'направо',
+                'transcription' => '[ɹaɪt]',
+            ),
+            array(
+                'word' => 'night',
+                'translation' => 'ночь',
+                'transcription' => '[naɪt]',
+            ),
+            array(
+                'word' => 'fight',
+                'translation' => 'бой, драка, драться (to fight)',
+                'transcription' => '[faɪt]',
+            ),
+            array(
+                'word' => 'flight',
+                'translation' => 'полёт, перелёт, совершать перелёт (to flight)',
+                'transcription' => '[flaɪt]',
+            ),
+            array(
+                'word' => 'light',
+                'translation' => 'свет',
+                'transcription' => '[laɪt]',
+            ),
         ),
         '-oo-' => array(
-            'good',
-            'look',
-            'school',
-            'book',
-            'food'
+            array(
+                'word' => 'good',
+                'translation' => 'хороший',
+                'transcription' => '[gud]',
+            ), array(
+                'word' => 'look',
+                'translation' => 'взгляд, смотреть (to look)',
+                'transcription' => '[luk]',
+            ), array(
+                'word' => 'school',
+                'translation' => 'школа',
+                'transcription' => '[skuːl]',
+            ), array(
+                'word' => 'book',
+                'translation' => 'книга',
+                'transcription' => '[buk]',
+            ), array(
+                'word' => 'food',
+                'translation' => 'еда, пища',
+                'transcription' => '[fuːd]',
+            )
         ),
         '-ive' => array(
-            'five',
-            'drive',
-            'alive'
+            array(
+                'word' => 'five',
+                'translation' => 'пять',
+                'transcription' => '[faɪv]',
+            ), array(
+                'word' => 'drive',
+                'translation' => 'ехать на машине, управлять автомобилем',
+                'transcription' => '[draɪv]',
+            ), array(
+                'word' => 'alive',
+                'translation' => 'живой',
+                'transcription' => '[ə\'laɪv]',
+            )
         ),
         '-ought' => array(
-            'thought',
-            'brought',
-            'bought',
-            'fought'
+            array(
+                'word' => 'thought',
+                'translation' => 'мысль, думал (непр. от think)',
+                'transcription' => '[θɔːt]',
+            ), array(
+                'word' => 'brought',
+                'translation' => 'принёс (непр. от bring)',
+                'transcription' => '[brɔːt]',
+            ), array(
+                'word' => 'bought',
+                'translation' => 'купил (непр. от buy)',
+                'transcription' => '[bɔːt]',
+            ), array(
+                'word' => 'fought',
+                'translation' => 'дрался, бился (непр. от fight)',
+                'transcription' => '[fɔːt]',
+            )
         ),
         '-ther' => array(
-            'father',
-            'mother',
-            'brother'
+            array(
+                'word' => 'father',
+                'translation' => 'папа, отец',
+                'transcription' => '[ˈfɑːðəʳ]',
+            ), array(
+                'word' => 'mother',
+                'translation' => 'мама, мать',
+                'transcription' => '[ˈmʌðəʳ]',
+            ), array(
+                'word' => 'brother',
+                'translation' => 'брат',
+                'transcription' => '[\'brʌðəʳ]',
+            )
         ),
         '-ful' => array(
-            'beautiful',
-            'awful',
-            'careful',
-            'powerful'
+            array(
+                'word' => 'beautiful',
+                'translation' => 'красивый, привлекательный',
+                'transcription' => '[\'bjuːtəf(ə)l]',
+            ), array(
+                'word' => 'awful',
+                'translation' => 'отвратительный',
+                'transcription' => '[\'ɔːf(ə)l]',
+            ), array(
+                'word' => 'careful',
+                'translation' => 'внимательный, осторожный',
+                'transcription' => '[\'keəf(ə)l]',
+            ), array(
+                'word' => 'powerful',
+                'translation' => 'мощный, могущественный',
+                'transcription' => '[\'pauəf(ə)l]',
+            )
         ),
         '-itch-' => array(
-            'itchy',
-            'kitchen',
-            'switch',
-            'witch'
+            array(
+                'word' => 'pitch',
+                'translation' => 'питч, презентация',
+                'transcription' => '[pɪʧ]',
+            ), array(
+                'word' => 'kitchen',
+                'translation' => 'кухня',
+                'transcription' => '[\'kɪʧɪn]',
+            ), array(
+                'word' => 'switch',
+                'translation' => 'выключатель, включать/выключать (to switch)',
+                'transcription' => '[swɪʧ]',
+            ), array(
+                'word' => 'witch',
+                'translation' => 'ведьма, колдунья',
+                'transcription' => '[\'bjuːtəf(ə)l]',
+            )
         )
     );
 
