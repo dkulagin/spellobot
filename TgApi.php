@@ -3,6 +3,8 @@
 define('BOT_TOKEN', '239979759:AAHwMmtLvjIIH-D745TA6gZSAC_z3qDNuFo');
 define('API_URL', 'https://api.telegram.org/bot' . BOT_TOKEN . '/');
 
+include_once 'RedisCli.php';
+
 /**
  * Created by PhpStorm.
  * User: Денис
@@ -11,6 +13,7 @@ define('API_URL', 'https://api.telegram.org/bot' . BOT_TOKEN . '/');
  */
 class TgApi
 {
+    private $redis;
     private $chatId;
 
     /**
@@ -19,6 +22,7 @@ class TgApi
      */
     public function __construct($chatId)
     {
+        $this->redis = RedisCli::getInstance();
         $this->chatId = $chatId;
     }
 
@@ -29,18 +33,56 @@ class TgApi
 
     public function sendVoice($filepath)
     {
-        $this->apiRequestPostMultipart("sendVoice", array(
-            'chat_id' => $this->chatId,
-            "voice" => '@' . $filepath // TODO: rework @ after migration to PHP7
-        ), true);
+        $cached = $this->redis->get('tg_voice_' . $filepath);
+
+        if ($cached) {
+            $voice = json_decode($cached, $assoc = true);
+
+            return $this->apiRequest("sendVoice", array(
+                'chat_id' => $this->chatId,
+                "voice" => $voice['file_id']
+            ));
+        } else {
+            $reply = $this->apiRequestPostMultipart("sendVoice", array(
+                'chat_id' => $this->chatId,
+                "voice" => '@' . $filepath // TODO: rework @ after migration to PHP7
+            ));
+
+            if ($reply) {
+                if (isset($reply['voice'])) {
+                    $this->redis->set('tg_voice_' . $filepath, json_encode($reply['voice']));
+                }
+            }
+
+            return $reply;
+        }
     }
 
-    public function sendImage($filepath)
+    public function sendPhoto($filepath)
     {
-        $this->apiRequestPostMultipart("sendPhoto", array(
-            'chat_id' => $this->chatId,
-            "photo" => '@' . $filepath // TODO: rework @ after migration to PHP7
-        ), true);
+        $cached = $this->redis->get('tg_photo_' . $filepath);
+
+        if ($cached) {
+            $photo = json_decode($cached, $assoc = true);
+
+            return $this->apiRequest("sendPhoto", array(
+                'chat_id' => $this->chatId,
+                'photo' => $photo[1]['file_id']
+            ));
+        } else {
+            $reply = $this->apiRequestPostMultipart("sendPhoto", array(
+                'chat_id' => $this->chatId,
+                "photo" => '@' . $filepath // TODO: rework @ after migration to PHP7
+            ));
+
+            if ($reply) {
+                if (isset($reply['photo'])) {
+                    $this->redis->set('tg_photo_' . $filepath, json_encode($reply['photo']));
+                }
+            }
+
+            return $reply;
+        }
     }
 
     private function exec_curl_request($handle)

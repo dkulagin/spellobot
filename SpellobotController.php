@@ -1,6 +1,7 @@
 <?php
 
 // TODO: migrate to autoload
+include_once 'SpellobotConfig.php';
 include_once 'SpellobotCore.php';
 include_once 'TgApi.php';
 
@@ -40,16 +41,8 @@ class SpellobotController
 
             if ($text == "/start") {
                 $this->getNewWordAndSendToChat(true);
-            } else if ($text == "/test") {
-                $this->tgApi->sendMessage('[wɔːl]');
-                $this->tgApi->sendVoice('/var/www/spellobot/audio/wall.opus');
-                $this->tgApi->sendImage('/var/www/spellobot/image/wall.jpg');
-                $this->tgApi->sendMessage('(стена)');
             } else {
                 $result = $this->core->submitAttempt($text);
-
-                $this->tgApi->sendMessage("Echo: " . $text);
-                $this->tgApi->sendMessage(print_r($result, true));
 
                 if ($result['isMatch']) {
                     $this->getNewWordAndSendToChat(false);
@@ -62,8 +55,25 @@ class SpellobotController
 
     private function getNewWordAndSendToChat($isFirstWord)
     {
-        $word = $this->core->getNextWord();
+        $wordArr = $this->core->getNextWord();
 
-        $this->tgApi->sendMessage(($isFirstWord ? "Слово: " : "Верно! Следующее слово: ") . $word);
+        if (!$isFirstWord) {
+            $this->tgApi->sendMessage("Верно! Следующее слово: " . $wordArr['transcription']);
+        } else {
+            $this->tgApi->sendMessage($wordArr['transcription']);
+        }
+
+        $voiceFilename = SpellobotConfig::VOICE_PATH . '/' . $wordArr['word'] . SpellobotConfig::VOICE_EXT;
+        if (file_exists($voiceFilename)) {
+            $this->tgApi->sendVoice($voiceFilename);
+        }
+
+        $imageFilename = SpellobotConfig::IMAGE_PATH . '/' . $wordArr['word'] . SpellobotConfig::IMAGE_EXT;
+        if (file_exists($imageFilename)) {
+            $this->tgApi->sendPhoto($imageFilename);
+        }
+
+        $this->tgApi->sendMessage('(' . $wordArr['translation'] . ')');
+        $this->tgApi->sendMessage('Как пишется это слово?');
     }
 }

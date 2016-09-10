@@ -31,8 +31,8 @@ class SpellobotCore
             'small',
             array(
                 'word' => 'wall',
-                'tr' => 'стена',
-                'img' => 'стена',
+                'translation' => 'стена',
+                'transcription' => '[wɔːl]',
             ),
             'football'
         ),
@@ -111,7 +111,11 @@ class SpellobotCore
     {
         $word = $this->redis->get('word_' . $this->chatId);
 
-        if ($word != $attempt) {
+        if ($word) {
+            $word = json_decode($word, true);
+        }
+
+        if ($word['word'] != $attempt) {
             return array(
                 'isMatch' => false,
                 'word' => $word
@@ -126,21 +130,23 @@ class SpellobotCore
         }
     }
 
-    private function cacheCurrentWord($word)
+    private function cacheCurrentWord($wordArr)
     {
-        $this->redis->set('word_' . $this->chatId, $word);
+        $this->redis->set('word_' . $this->chatId, json_encode($wordArr));
 
-        return $word;
+        return $wordArr;
     }
 
-    private function markWordAsComplete($completeWord)
+    private function markWordAsComplete($completeWordArr)
     {
         foreach ($this->wordGroups as $wordGroupName => $wordGroup) {
             $count = 0;
 
-            foreach ($wordGroup as $word) {
-                if ($word == $completeWord) {
+            foreach ($wordGroup as $wordArr) {
+                if ($wordArr == $completeWordArr) {
                     $this->redis->set('chatId_' . $this->chatId . '_group' . $wordGroupName, $count + 1);
+
+                    return;
                 }
 
                 $count++;
