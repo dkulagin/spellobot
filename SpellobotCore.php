@@ -48,7 +48,7 @@ class SpellobotCore
         '-all' => array(
             array(
                 'word' => 'call',
-                'translation' => 'звонок, звонить (to call)',
+                'translation' => 'звонок, звонить',
                 'transcription' => '[сɔːl]',
             ),
             array(
@@ -85,12 +85,12 @@ class SpellobotCore
             ),
             array(
                 'word' => 'fight',
-                'translation' => 'бой, драка, драться (to fight)',
+                'translation' => 'бой, драка, драться',
                 'transcription' => '[faɪt]',
             ),
             array(
                 'word' => 'flight',
-                'translation' => 'полёт, перелёт, совершать перелёт (to flight)',
+                'translation' => 'полёт, перелёт, совершать перелёт',
                 'transcription' => '[flaɪt]',
             ),
             array(
@@ -106,7 +106,7 @@ class SpellobotCore
                 'transcription' => '[gud]',
             ), array(
                 'word' => 'look',
-                'translation' => 'взгляд, смотреть (to look)',
+                'translation' => 'взгляд, смотреть',
                 'transcription' => '[luk]',
             ), array(
                 'word' => 'school',
@@ -201,7 +201,7 @@ class SpellobotCore
                 'transcription' => '[\'kɪʧɪn]',
             ), array(
                 'word' => 'switch',
-                'translation' => 'выключатель, включать/выключать (to switch)',
+                'translation' => 'выключатель, включать/выключать',
                 'transcription' => '[swɪʧ]',
             ), array(
                 'word' => 'witch',
