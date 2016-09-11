@@ -57,11 +57,13 @@ class SpellobotController
     {
         $wordArr = $this->core->getNextWord();
 
+        $translation = ' (' . $wordArr['translation'] . ')';
         if (!$isFirstWord) {
-            $this->tgApi->sendMessage("Верно! Следующее слово: " . $wordArr['transcription']);
+            $this->tgApi->sendMessage("Верно! Следующее слово: " . $wordArr['transcription'] . $translation);
         } else {
-            $this->tgApi->sendMessage($wordArr['transcription']);
+            $this->tgApi->sendMessage($wordArr['transcription'] . $translation);
         }
+        $this->tgApi->sendMessage('Как пишется это слово?');
 
         $voiceFilename = SpellobotConfig::VOICE_PATH . '/' . $wordArr['word'] . SpellobotConfig::VOICE_EXT;
         if (file_exists($voiceFilename)) {
@@ -72,8 +74,5 @@ class SpellobotController
         if (file_exists($imageFilename)) {
             $this->tgApi->sendPhoto($imageFilename);
         }
-
-        $this->tgApi->sendMessage('(' . $wordArr['translation'] . ')');
-        $this->tgApi->sendMessage('Как пишется это слово?');
     }
 }

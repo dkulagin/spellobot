@@ -140,15 +140,15 @@ class SpellobotCore
         '-ought' => array(
             array(
                 'word' => 'thought',
-                'translation' => 'мысль, думал (непр. от think)',
+                'translation' => 'мысль, думал/-а (непр. от think)',
                 'transcription' => '[θɔːt]',
             ), array(
                 'word' => 'brought',
-                'translation' => 'принёс (непр. от bring)',
+                'translation' => 'принёс/-несла (непр. от bring)',
                 'transcription' => '[brɔːt]',
             ), array(
                 'word' => 'bought',
-                'translation' => 'купил (непр. от buy)',
+                'translation' => 'купил/-а (непр. от buy)',
                 'transcription' => '[bɔːt]',
             ), array(
                 'word' => 'fought',
