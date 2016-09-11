@@ -45,6 +45,8 @@ class SpellobotController
                 $this->core->reset();
 
                 $this->getNewWordAndSendToChat(true);
+            } else if ($text == "/ok") {
+                $this->getNewWordAndSendToChat(true, $showGroupIntro = false);
             } else {
                 $result = $this->core->submitAttempt($text);
 
@@ -57,26 +59,42 @@ class SpellobotController
         }
     }
 
-    private function getNewWordAndSendToChat($isFirstWord)
+    private function getNewWordAndSendToChat($isFirstWord, $showGroupIntro = true)
     {
         $wordArr = $this->core->getNextWord();
 
-        $translation = ' (' . $wordArr['translation'] . ')';
-        if (!$isFirstWord) {
-            $this->tgApi->sendMessage("Верно! Следующее слово: " . $wordArr['transcription'] . $translation);
+        if ($wordArr['isNewGroup'] && $showGroupIntro) {
+            $this->compileAndSendGroupDescription($wordArr);
         } else {
-            $this->tgApi->sendMessage($wordArr['transcription'] . $translation);
-        }
-        $this->tgApi->sendMessage('Как пишется это слово?');
+            $translation = ' (' . $wordArr['translation'] . ')';
+            if (!$isFirstWord) {
+                $this->tgApi->sendMessage("Верно! Следующее слово: " . $wordArr['transcription'] . $translation);
+            } else {
+                $this->tgApi->sendMessage($wordArr['transcription'] . $translation);
+            }
+            $this->tgApi->sendMessage('Как пишется это слово?');
 
-        $voiceFilename = SpellobotConfig::VOICE_PATH . '/' . $wordArr['word'] . SpellobotConfig::VOICE_EXT;
-        if (file_exists($voiceFilename)) {
-            $this->tgApi->sendVoice($voiceFilename);
+            $voiceFilename = SpellobotConfig::VOICE_PATH . '/' . $wordArr['word'] . SpellobotConfig::VOICE_EXT;
+            if (file_exists($voiceFilename)) {
+                $this->tgApi->sendVoice($voiceFilename);
+            }
+
+            $imageFilename = SpellobotConfig::IMAGE_PATH . '/' . $wordArr['word'] . SpellobotConfig::IMAGE_EXT;
+            if (file_exists($imageFilename)) {
+                $this->tgApi->sendPhoto($imageFilename);
+            }
+        }
+    }
+
+    private function compileAndSendGroupDescription($wordArr)
+    {
+        $this->tgApi->sendMessage($wordArr['groupMeta']['description'] . ". Например: ");
+
+        foreach ($wordArr['group'] as $word) {
+            $this->tgApi->sendMessage($word['word'] . " " . $word['transcription']
+                . ' (' . $word['translation'] . ')');
         }
 
-        $imageFilename = SpellobotConfig::IMAGE_PATH . '/' . $wordArr['word'] . SpellobotConfig::IMAGE_EXT;
-        if (file_exists($imageFilename)) {
-            $this->tgApi->sendPhoto($imageFilename);
-        }
+        $this->tgApi->sendMessage("Набирай команду /ok, чтобы начать тренировку");
     }
 }

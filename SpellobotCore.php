@@ -17,7 +17,7 @@ class SpellobotCore
     private $chatId;
 
     // TODO: migrate to database
-    private $descriptions = array(
+    private $groupMetas = array(
         '-tion' => array(
             'description' => 'Слова, заканчивающиеся на звук -шн[ʃn] или -шэн[ʃən], пишутся с -tion на конце'
         ),
@@ -257,10 +257,21 @@ class SpellobotCore
             $count = $this->redis->get('chatId_' . $this->chatId . '_group' . $wordGroupName);
 
             if (!$count) {
-                return $this->cacheCurrentWord($wordGroup[0]);
+                $wordArr = $this->cacheCurrentWord($wordGroup[0]);
+
+                $wordArr['isNewGroup'] = true;
+                $wordArr['groupMeta'] = $this->groupMetas[$wordGroupName];
+                $wordArr['group'] = $this->wordGroups[$wordGroupName];
+
+                return $wordArr;
             } else {
                 if ($count < count($wordGroup)) {
-                    return $this->cacheCurrentWord($wordGroup[$count]);
+                    $wordArr = $this->cacheCurrentWord($wordGroup[$count]);
+
+                    $wordArr['isNewGroup'] = false;
+                    $wordArr['group'] = $this->groupMetas[$wordGroupName];
+
+                    return $wordArr;
                 }
             }
         }
