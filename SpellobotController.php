@@ -41,6 +41,10 @@ class SpellobotController
 
             if ($text == "/start") {
                 $this->getNewWordAndSendToChat(true);
+            } else if ($text == "/reset") {
+                $this->core->reset();
+
+                $this->getNewWordAndSendToChat(true);
             } else {
                 $result = $this->core->submitAttempt($text);
 

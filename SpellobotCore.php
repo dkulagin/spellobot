@@ -284,4 +284,14 @@ class SpellobotCore
             }
         }
     }
+
+    public function reset() {
+        // drop current word
+        $this->redis->del('word_' . $this->chatId);
+
+        // drop group word progress
+        foreach ($this->wordGroups as $wordGroupName => $wordGroup) {
+            $this->redis->del('chatId_' . $this->chatId . '_group' . $wordGroupName);
+        }
+    }
 }
