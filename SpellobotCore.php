@@ -17,6 +17,36 @@ class SpellobotCore
     private $chatId;
 
     // TODO: migrate to database
+    private $descriptions = array(
+        '-tion' => array(
+            'description' => 'Слова, заканчивающиеся на звук -шн[ʃn] или -шэн[ʃən], пишутся с -tion на конце'
+        ),
+        '-all' => array(
+            'description' => 'Слова, заканчивающиеся на звук -ол[ɔːl], пишутся с -all на конце'
+        ),
+        '-ight' => array(
+            'description' => 'Слова, заканчивающиеся на звук -айт[aɪt], пишутся с -ight на конце'
+        ),
+        '-oo-' => array(
+            'description' => 'Длинный звук у[u:] записывается как -oo-'
+        ),
+        '-ive' => array(
+            'description' => 'Слова с открытым ударным -айв[aɪv] на конце, на письме заканчиваются на -ive'
+        ),
+        '-ought' => array(
+            'description' => 'Неправильные глаголы на -от[ɔːt] в записи оканчиваются на -ought'
+        ),
+        '-ther' => array(
+            'description' => 'Слова на звук -зэр[-ðəʳ] на письме оканчиваются на -ther'
+        ),
+        '-ful' => array(
+            'description' => 'Часто встречающийся суффикс -фэл[-f(ə)l]  записывается как -ful'
+        ),
+        '-itch' => array(
+            'description' => 'Звук -итч[-ɪʧ-] записывается как -itch-'
+        ),
+    );
+
     private $wordGroups = array(
         '-tion' => array(
             array(
@@ -76,7 +106,7 @@ class SpellobotCore
             array(
                 'word' => 'right',
                 'translation' => 'направо',
-                'transcription' => '[ɹaɪt]',
+                'transcription' => '[raɪt]',
             ),
             array(
                 'word' => 'night',
@@ -206,7 +236,7 @@ class SpellobotCore
             ), array(
                 'word' => 'witch',
                 'translation' => 'ведьма, колдунья',
-                'transcription' => '[\'bjuːtəf(ə)l]',
+                'transcription' => '[wɪʧ]',
             )
         )
     );
@@ -285,7 +315,8 @@ class SpellobotCore
         }
     }
 
-    public function reset() {
+    public function reset()
+    {
         // drop current word
         $this->redis->del('word_' . $this->chatId);
 
