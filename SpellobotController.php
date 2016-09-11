@@ -40,15 +40,19 @@ class SpellobotController
             $this->core = new SpellobotCore($chatId);
 
             if ($text == "/start") {
-                $this->getNewWordAndSendToChat(true);
+                if ($this->core->isNewUser()) {
+                    $this->showWelcomeMessage();
+
+                    $this->core->setUserFlag();
+                } else {
+                    $this->getNewWordAndSendToChat(true);
+                }
             } else if ($text == "/reset") {
                 $this->core->reset();
-
-                $this->getNewWordAndSendToChat(true);
             } else if ($text == "/ok") {
                 $this->getNewWordAndSendToChat(true, $showGroupIntro = false);
             } else {
-                $result = $this->core->submitAttempt($text);
+                $result = $this->core->submitAttempt(strtolower($text));
 
                 if ($result['isMatch']) {
                     $this->getNewWordAndSendToChat(false);
@@ -96,5 +100,13 @@ class SpellobotController
         }
 
         $this->tgApi->sendMessage("Набирай команду /ok, чтобы начать тренировку");
+    }
+
+    private function showWelcomeMessage()
+    {
+        $this->tgApi->sendPhoto(SpellobotConfig::WELCOME_IMAGE_FILENAME);
+
+        $this->tgApi->sendMessage("Привет! Меня зовут Spellobot и я помогу тебе быстро научиться записывать английские слова 
+        на слух. Жми комманду /start, если готов начать!");
     }
 }

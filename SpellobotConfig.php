@@ -15,4 +15,6 @@ class SpellobotConfig
 
     const IMAGE_EXT = '.jpg';
     const VOICE_EXT = '.opus';
+
+    const WELCOME_IMAGE_FILENAME = '/var/www/spellobot/img/welcome.png';
 }

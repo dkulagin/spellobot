@@ -328,6 +328,9 @@ class SpellobotCore
 
     public function reset()
     {
+        // drop user flag
+        $this->redis->del('chatId_' . $this->chatId);
+
         // drop current word
         $this->redis->del('word_' . $this->chatId);
 
@@ -335,5 +338,17 @@ class SpellobotCore
         foreach ($this->wordGroups as $wordGroupName => $wordGroup) {
             $this->redis->del('chatId_' . $this->chatId . '_group' . $wordGroupName);
         }
+    }
+
+    public function isNewUser()
+    {
+        $userFlag = $this->redis->get('chatId_' . $this->chatId);
+
+        return !$userFlag;
+    }
+
+    public function setUserFlag()
+    {
+        $this->redis->set('chatId_' . $this->chatId, 1);
     }
 }
