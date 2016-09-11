@@ -31,6 +31,60 @@ class TgApi
         $this->apiRequest("sendMessage", array('chat_id' => $this->chatId, "text" => $text));
     }
 
+    public function sendSticker($filepath)
+    {
+        $cached = $this->redis->get('tg_sticker_' . $filepath);
+
+        if ($cached) {
+            $voice = json_decode($cached, $assoc = true);
+
+            return $this->apiRequest("sendSticker", array(
+                'chat_id' => $this->chatId,
+                "sticker" => $voice['file_id']
+            ));
+        } else {
+            $reply = $this->apiRequestPostMultipart("sendSticker", array(
+                'chat_id' => $this->chatId,
+                "sticker" => '@' . $filepath // TODO: rework @ after migration to PHP7
+            ));
+
+            if ($reply) {
+                if (isset($reply['sticker'])) {
+                    $this->redis->set('tg_sticker_' . $filepath, json_encode($reply['sticker']));
+                }
+            }
+
+            return $reply;
+        }
+    }
+
+    public function sendDocument($filepath)
+    {
+        $cached = $this->redis->get('tg_doc_' . $filepath);
+
+        if ($cached) {
+            $voice = json_decode($cached, $assoc = true);
+
+            return $this->apiRequest("sendDocument", array(
+                'chat_id' => $this->chatId,
+                "document" => $voice['file_id']
+            ));
+        } else {
+            $reply = $this->apiRequestPostMultipart("sendDocument", array(
+                'chat_id' => $this->chatId,
+                "document" => '@' . $filepath // TODO: rework @ after migration to PHP7
+            ));
+
+            if ($reply) {
+                if (isset($reply['document'])) {
+                    $this->redis->set('tg_doc_' . $filepath, json_encode($reply['document']));
+                }
+            }
+
+            return $reply;
+        }
+    }
+
     public function sendVoice($filepath)
     {
         $cached = $this->redis->get('tg_voice_' . $filepath);

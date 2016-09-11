@@ -281,23 +281,24 @@ class SpellobotCore
 
     public function submitAttempt($attempt)
     {
-        $word = $this->redis->get('word_' . $this->chatId);
+        $wordArr = $this->redis->get('word_' . $this->chatId);
 
-        if ($word) {
-            $word = json_decode($word, true);
+        if ($wordArr) {
+            $wordArr = json_decode($wordArr, true);
         }
 
-        if ($word['word'] != $attempt) {
+        if ($wordArr['word'] != $attempt) {
             return array(
                 'isMatch' => false,
-                'word' => $word
+                'word' => $wordArr
             );
         } else {
-            $this->markWordAsComplete($word);
+            $isGroupComplete = $this->markWordAsComplete($wordArr);
 
             return array(
                 'isMatch' => true,
-                'word' => $word
+                'isGroupComplete' => $isGroupComplete,
+                'word' => $wordArr
             );
         }
     }
@@ -318,12 +319,18 @@ class SpellobotCore
                 if ($wordArr == $completeWordArr) {
                     $this->redis->set('chatId_' . $this->chatId . '_group' . $wordGroupName, $count + 1);
 
-                    return;
+                    if ($count + 1 >= count($wordGroup)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
 
                 $count++;
             }
         }
+
+        return false;
     }
 
     public function reset()
